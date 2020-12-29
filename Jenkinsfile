@@ -13,7 +13,7 @@ pipeline{
         }
         stage('Terraform Apply'){
             steps{
-                bat 'terraform apply -out terraform-plan'
+                bat 'terraform apply -auto-approve "terraform-plan"'
             }
         }
     }
