@@ -3,9 +3,15 @@ resource "aws_ecs_service" "dashboard-service" {
   name            = "dashboard-service"
   cluster         = aws_ecs_cluster.aws-ecs-dev.id
   task_definition = aws_ecs_task_definition.dashboard-service.arn
+  iam_role        = aws_iam_role.ecs-service-role.arn
   desired_count   = 4
   depends_on = [aws_iam_role_policy_attachment.ecs-service-attach]
 
+  load_balancer {
+    target_group_arn = aws_alb_target_group.dashboard-service.id
+    container_name   = "dashboard-service"
+    container_port   = "8000"
+  }
   lifecycle {
     ignore_changes = [task_definition]
   }
@@ -19,7 +25,7 @@ resource "aws_ecs_task_definition" "dashboard-service" {
   {
     "portMappings": [
       {
-        "hostPort": 8000,
+        "hostPort": 0,
         "protocol": "tcp",
         "containerPort": 8000
       }
