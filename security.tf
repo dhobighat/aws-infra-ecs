@@ -1,20 +1,21 @@
-resource "aws_security_group" "instance_sg" {
-  description = "controls direct access to application instances"
+resource "aws_security_group" "aws-dev-ec2-sg" {
+  description = "Controls direct access to application instances (EC2)"
   vpc_id      = aws_vpc.aws-dev-vpc.id
-  name        = "application-instances-sg"
+  name        = "aws-dev-ec2-sg"
 
   ingress {
     protocol    = "tcp"
     from_port   = 32768
     to_port     = 65535
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Access from ALB"
+    description = "Load Balancer Access"
   }
   ingress {
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
     cidr_blocks = ["0.0.0.0/0"]
+    description = "SSH Access"
   }
 
   egress {
@@ -25,10 +26,10 @@ resource "aws_security_group" "instance_sg" {
   }
 }
 
-resource "aws_security_group" "lb_sg" {
-  description = "controls access to the application ELB"
+resource "aws_security_group" "aws-dev-alb-sg" {
+  description = "Controls access to the application ELB"
   vpc_id = aws_vpc.aws-dev-vpc.id
-  name   = "aws-ecs-dev-elb"
+  name   = "aws-dev-alb-sg"
 
   ingress {
     protocol    = "tcp"
@@ -48,9 +49,6 @@ resource "aws_security_group" "lb_sg" {
     from_port = 0
     to_port   = 0
     protocol  = "-1"
-
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
