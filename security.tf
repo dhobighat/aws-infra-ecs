@@ -1,7 +1,7 @@
-resource "aws_security_group" "aws-dev-ec2-sg" {
+resource "aws_security_group" "dev-ec2-sg" {
   description = "Controls direct access to application instances (EC2)"
-  vpc_id      = aws_vpc.aws-dev-vpc.id
-  name        = "aws-dev-ec2-sg"
+  vpc_id      = aws_vpc.dev-vpc.id
+  name        = "dev-ec2-sg"
 
   ingress {
     protocol    = "tcp"
@@ -26,10 +26,10 @@ resource "aws_security_group" "aws-dev-ec2-sg" {
   }
 }
 
-resource "aws_security_group" "aws-dev-alb-sg" {
+resource "aws_security_group" "dev-alb-sg" {
   description = "Controls access to the application ELB"
-  vpc_id = aws_vpc.aws-dev-vpc.id
-  name   = "aws-dev-alb-sg"
+  vpc_id = aws_vpc.dev-vpc.id
+  name   = "dev-alb-sg"
 
   ingress {
     protocol    = "tcp"

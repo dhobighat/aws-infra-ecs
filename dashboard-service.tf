@@ -1,11 +1,11 @@
 # dashboard-service
 resource "aws_ecs_service" "dashboard-service" {
   name            = "dashboard-service"
-  cluster         = aws_ecs_cluster.aws-dev-ecs-cluster.id
+  cluster         = aws_ecs_cluster.dev-ecs-cluster.id
   task_definition = aws_ecs_task_definition.dashboard-service-task-definition.arn
-  iam_role        = aws_iam_role.aws-dev-ecs-role.arn
+  iam_role        = aws_iam_role.dev-ecs-role.arn
   desired_count   = 2
-  depends_on = [aws_iam_role_policy_attachment.aws-dev-ecs-role-attachment]
+  depends_on = [aws_iam_role_policy_attachment.dev-ecs-policy-attachment]
 
   load_balancer {
     target_group_arn = aws_alb_target_group.dashboard-service-target-group.id
@@ -32,13 +32,13 @@ resource "aws_ecs_task_definition" "dashboard-service-task-definition" {
     ],
     "cpu": 256,
     "memory": 300,
-    "image": "docker.io/docker131186/dashboard-service:latest",
+    "image": "docker.io/dhobighat/dashboard-service:latest",
     "essential": true,
     "name": "dashboard-service",
     "logConfiguration": {
     "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "/aws-ecs-log/dashboard-service",
+        "awslogs-group": "/dhobighat-log/dashboard-service",
         "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "ecs"
       }
@@ -49,15 +49,15 @@ EOF
 }
 
 resource "aws_cloudwatch_log_group" "dashboard-service-log-group" {
-  name = "/aws-ecs-log/dashboard-service"
+  name = "/dhobighat-log/dashboard-service"
 }
 
 resource "aws_alb_target_group" "dashboard-service-target-group" {
   name       = "dashboard-service-target-group"
   port       = 8900
   protocol   = "HTTP"
-  vpc_id     = aws_vpc.aws-dev-vpc.id
-  depends_on = [aws_alb.aws-dev-alb]
+  vpc_id     = aws_vpc.dev-vpc.id
+  depends_on = [aws_alb.dev-alb]
 
   stickiness {
     type            = "lb_cookie"
@@ -74,8 +74,8 @@ resource "aws_alb_target_group" "dashboard-service-target-group" {
   }
 }
 
-resource "aws_alb_listener" "aws-dev-alb-listener-port-dashboard-service" {
-  load_balancer_arn = aws_alb.aws-dev-alb.id
+resource "aws_alb_listener" "dev-alb-listener-port-dashboard-service" {
+  load_balancer_arn = aws_alb.dev-alb.id
   port              = "8900"
   protocol          = "HTTP"
 
