@@ -5,4 +5,7 @@ resource "aws_alb" "dev-alb" {
   security_groups = [aws_security_group.dev-alb-sg.id]
   enable_http2    = "true"
   idle_timeout    = 600
+
 }
+
+
