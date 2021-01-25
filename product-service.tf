@@ -77,8 +77,7 @@ resource "aws_alb_target_group" "product-service-target-group" {
 resource "aws_alb_listener" "dev-alb-listener-port-product-service" {
   load_balancer_arn = aws_alb.dev-alb.id
   port              = "8901"
-  protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate.ssl-cert-dhobighat-tk.arn
+  protocol          = "HTTP"
   default_action {
     target_group_arn = aws_alb_target_group.product-service-target-group.id
     type             = "forward"

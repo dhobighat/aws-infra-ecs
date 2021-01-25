@@ -13,9 +13,6 @@ resource "aws_ecs_service" "dashboard-service" {
     container_port   = "8000"
   }
 
-  service_registries {
-    registry_arn = ""
-  }
   lifecycle {
     ignore_changes = [task_definition]
   }
@@ -81,8 +78,7 @@ resource "aws_alb_target_group" "dashboard-service-target-group" {
 resource "aws_alb_listener" "dev-alb-listener-port-dashboard-service" {
   load_balancer_arn = aws_alb.dev-alb.id
   port              = "8900"
-  protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate.ssl-cert-dhobighat-tk.arn
+  protocol          = "HTTP"
   default_action {
     target_group_arn = aws_alb_target_group.dashboard-service-target-group.id
     type             = "forward"
